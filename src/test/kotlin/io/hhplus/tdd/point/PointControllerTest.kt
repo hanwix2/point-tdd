@@ -102,4 +102,27 @@ class PointControllerTest {
         verify(exactly = 1) { pointService.chargePoint(userId, chargeAmount) }
     }
 
+    @Test
+    fun useUserPointApi() {
+        val userId = 1L
+        val useAmount = 300L
+        val updatedUserPoint = UserPoint(userId, 700L, System.currentTimeMillis())
+
+        every { pointService.usePoint(userId, useAmount) } returns updatedUserPoint
+
+        mockMvc.patch("/point/$userId/use") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(useAmount)
+        }.andExpect {
+            status { isOk() }
+            content {
+                contentType(MediaType.APPLICATION_JSON)
+                jsonPath("$.id", userId.toString())
+                jsonPath("$.point", "700")
+            }
+        }
+
+        verify(exactly = 1) { pointService.usePoint(userId, useAmount) }
+    }
+
 }

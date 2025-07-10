@@ -27,4 +27,13 @@ class PointService(
         return userPointRepository.save(pointAddedUserPoint)
     }
 
+    fun usePoint(id: Long, amount: Long): UserPoint {
+        val userPoint = userPointRepository.getPointByUserId(id)
+        val pointUsedUserPoint = userPoint.usePoint(amount)
+
+        pointHistoryRepository.save(PointHistory.useHistory(id, amount))
+
+        return userPointRepository.save(pointUsedUserPoint)
+    }
+
 }

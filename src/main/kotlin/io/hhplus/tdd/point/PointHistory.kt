@@ -10,6 +10,9 @@ data class PointHistory(
     companion object {
         fun chargeHistory(userId: Long, amount: Long, timeMillis: Long = System.currentTimeMillis()): PointHistory =
             PointHistory(0L, userId, TransactionType.CHARGE, amount, timeMillis)
+
+        fun useHistory(userId: Long, amount: Long, timeMillis: Long = System.currentTimeMillis()): PointHistory =
+            PointHistory(0L, userId, TransactionType.USE, amount, timeMillis)
     }
 }
 

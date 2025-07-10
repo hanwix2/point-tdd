@@ -85,4 +85,35 @@ class PointServiceTest {
         shouldThrow<IllegalArgumentException> { pointService.chargePoint(userId, chargeAmount) }
     }
 
+    @Test
+    fun usePoint() {
+        val userId = 1L
+        val initialPoint = 100L
+        val useAmount = 50L
+        val updatedPoint = initialPoint - useAmount
+
+        val userPoint = UserPoint(id = userId, point = initialPoint, updateMillis = System.currentTimeMillis())
+
+        every { userPointRepository.getPointByUserId(userId) } returns userPoint
+        every { userPointHistoryRepository.save(any()) }  answers { firstArg<PointHistory>() }
+        every { userPointRepository.save(any()) } answers { firstArg<UserPoint>() }
+
+        val result = pointService.usePoint(userId, useAmount)
+
+        result.id shouldBe userId
+        result.point shouldBe updatedPoint
+    }
+
+    @Test
+    fun usePoint_throws_IllegalArgumentException_cause_by_negative_point() {
+        val userId = 1L
+        val useAmount = -50L
+
+        val userPoint = UserPoint(id = userId, point = 100L, updateMillis = System.currentTimeMillis())
+
+        every { userPointRepository.getPointByUserId(userId) } returns userPoint
+
+        shouldThrow<IllegalArgumentException> { pointService.usePoint(userId, useAmount) }
+    }
+
 }
