@@ -6,7 +6,15 @@ data class PointHistory(
     val type: TransactionType,
     val amount: Long,
     val timeMillis: Long,
-)
+) {
+    companion object {
+        fun chargeHistory(userId: Long, amount: Long, timeMillis: Long = System.currentTimeMillis()): PointHistory =
+            PointHistory(0L, userId, TransactionType.CHARGE, amount, timeMillis)
+
+        fun useHistory(userId: Long, amount: Long, timeMillis: Long = System.currentTimeMillis()): PointHistory =
+            PointHistory(0L, userId, TransactionType.USE, amount, timeMillis)
+    }
+}
 
 /**
  * 포인트 트랜잭션 종류

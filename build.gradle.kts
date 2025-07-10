@@ -22,8 +22,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation(libs.spring.boot.starter.web)
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.1")
     annotationProcessor(libs.spring.boot.configuration.processor)
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    testImplementation("io.mockk:mockk:1.14.4")
+
 }
 
 // about source and compilation
