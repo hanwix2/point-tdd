@@ -2,6 +2,8 @@ package io.hhplus.tdd.point
 
 import io.hhplus.tdd.point.repository.PointHistoryRepository
 import io.hhplus.tdd.point.repository.UserPointRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -52,5 +54,35 @@ class PointServiceTest {
         assert(actualPointHistories[1] == expectedPointHistories[1])
     }
 
+    @Test
+    fun chargePoint() {
+        val userId = 1L
+        val initialPoint = 100L
+        val chargeAmount = 50L
+        val updatedPoint = initialPoint + chargeAmount
+
+        val userPoint = UserPoint(id = userId, point = initialPoint, updateMillis = System.currentTimeMillis())
+
+        every { userPointRepository.getPointByUserId(userId) } returns userPoint
+        every { userPointHistoryRepository.save(any()) } answers { firstArg<PointHistory>() }
+        every { userPointRepository.save(any()) } answers { firstArg<UserPoint>() }
+
+        val result = pointService.chargePoint(userId, chargeAmount)
+
+        result.id shouldBe userId
+        result.point shouldBe updatedPoint
+    }
+
+    @Test
+    fun chargePoint_throws_IllegalArgumentException_cause_by_negative_point() {
+        val userId = 1L
+        val chargeAmount = -50L
+
+        val userPoint = UserPoint(id = userId, point = 100L, updateMillis = System.currentTimeMillis())
+
+        every { userPointRepository.getPointByUserId(userId) } returns userPoint
+
+        shouldThrow<IllegalArgumentException> { pointService.chargePoint(userId, chargeAmount) }
+    }
 
 }
