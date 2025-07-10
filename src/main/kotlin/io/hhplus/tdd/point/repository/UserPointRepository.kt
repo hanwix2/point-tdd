@@ -11,4 +11,6 @@ class UserPointRepository(
 
     fun getPointByUserId(userId: Long): UserPoint = userPointTable.selectById(userId)
 
+    fun save(userPoint: UserPoint): UserPoint = userPointTable.insertOrUpdate(userPoint.id, userPoint.point)
+
 }

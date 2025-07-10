@@ -22,15 +22,12 @@ class PointController(
         return pointService.getPointHistoriesByUserId(id)
     }
 
-    /**
-     * TODO - 특정 유저의 포인트를 충전하는 기능을 작성해주세요.
-     */
     @PatchMapping("{id}/charge")
     fun charge(
         @PathVariable id: Long,
         @RequestBody amount: Long,
     ): UserPoint {
-        return UserPoint(0, 0, 0)
+        return pointService.chargePoint(id, amount)
     }
 
     /**

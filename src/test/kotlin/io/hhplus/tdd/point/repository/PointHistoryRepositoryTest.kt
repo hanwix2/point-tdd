@@ -29,4 +29,22 @@ class PointHistoryRepositoryTest {
         assertEquals(expectedHistories, actualHistories)
     }
 
+    @Test
+    fun save() {
+        val pointHistory = PointHistory(1L, 1L, TransactionType.CHARGE, 1000L, System.currentTimeMillis())
+
+        every {
+            pointHistoryTable.insert(
+                pointHistory.userId,
+                pointHistory.amount,
+                pointHistory.type,
+                pointHistory.timeMillis
+            )
+        } returns pointHistory
+
+        val savedPointHistory = pointHistoryRepository.save(pointHistory)
+
+        assertEquals(pointHistory, savedPointHistory)
+    }
+
 }

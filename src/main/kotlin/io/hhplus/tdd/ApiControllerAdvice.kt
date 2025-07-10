@@ -21,4 +21,13 @@ class ApiControllerAdvice : ResponseEntityExceptionHandler() {
             HttpStatus.INTERNAL_SERVER_ERROR,
         )
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+        logger.error("IllegalArgumentException: ${e.message}", e)
+        return ResponseEntity(
+            ErrorResponse("400", e.message ?: "잘못된 요청입니다."),
+            HttpStatus.BAD_REQUEST,
+        )
+    }
 }

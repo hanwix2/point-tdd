@@ -11,4 +11,7 @@ class PointHistoryRepository(
 
     fun findByUserId(userId: Long): List<PointHistory> = pointHistoryTable.selectAllByUserId(userId)
 
+    fun save(pointHistory: PointHistory): PointHistory =
+        pointHistoryTable.insert(pointHistory.userId, pointHistory.amount, pointHistory.type, pointHistory.timeMillis)
+
 }

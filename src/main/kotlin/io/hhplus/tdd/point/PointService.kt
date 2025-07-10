@@ -18,4 +18,13 @@ class PointService(
         return pointHistoryRepository.findByUserId(id)
     }
 
+    fun chargePoint(id: Long, amount: Long): UserPoint {
+        val userPoint = userPointRepository.getPointByUserId(id)
+        val pointAddedUserPoint = userPoint.addPoint(amount)
+
+        pointHistoryRepository.save(PointHistory.chargeHistory(id, amount))
+
+        return userPointRepository.save(pointAddedUserPoint)
+    }
+
 }

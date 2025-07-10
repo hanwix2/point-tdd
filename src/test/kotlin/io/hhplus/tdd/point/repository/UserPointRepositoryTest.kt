@@ -24,4 +24,15 @@ class UserPointRepositoryTest {
         assertEquals(expectedPoint, actualPoint)
     }
 
+    @Test
+    fun save() {
+        val userPoint = UserPoint(id = 1L, point = 1000L, updateMillis = System.currentTimeMillis())
+
+        every { userPointTable.insertOrUpdate(userPoint.id, userPoint.point) } returns userPoint
+
+        val savedUserPoint = userPointRepository.save(userPoint)
+
+        assertEquals(userPoint, savedUserPoint)
+    }
+
 }
