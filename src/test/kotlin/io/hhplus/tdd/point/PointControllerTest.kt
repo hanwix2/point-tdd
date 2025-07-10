@@ -40,6 +40,46 @@ class PointControllerTest {
     }
 
     @Test
+    fun getUserPointHistoriesApi() {
+        val userId = 1L
+        val histories = listOf(
+            PointHistory(
+                id = 1L,
+                userId = userId,
+                amount = 100L,
+                type = TransactionType.CHARGE,
+                timeMillis = System.currentTimeMillis()
+            ),
+            PointHistory(
+                id = 2L,
+                userId = userId,
+                amount = 50L,
+                type = TransactionType.USE,
+                timeMillis = System.currentTimeMillis()
+            )
+        )
+        every { pointService.getPointHistoriesByUserId(userId) } returns histories
+
+        mockMvc.get("/point/$userId/histories")
+            .andExpect {
+                status { isOk() }
+                content {
+                    contentType(MediaType.APPLICATION_JSON)
+                    jsonPath("$[0].id", "1")
+                    jsonPath("$[0].userId", userId)
+                    jsonPath("$[0].amount", "100")
+                    jsonPath("$[0].type", "CHARGE")
+                    jsonPath("$[1].id", "2")
+                    jsonPath("$[1].userId", userId)
+                    jsonPath("$[1].amount", "50")
+                    jsonPath("$[1].type", "USE")
+                }
+            }
+
+        verify(exactly = 1) { pointService.getPointHistoriesByUserId(userId) }
+    }
+
+    @Test
     fun chargeUserPointApi() {
         val userId = 1L
         val chargeAmount = 500L
